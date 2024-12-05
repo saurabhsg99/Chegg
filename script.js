@@ -56,6 +56,8 @@ function processText(input) {
   findAndRemove("***");
   findAndRemove("##");
   findAndRemove("**");
+  findAndRemove(".\n");
+  findAndRemove(":\n");
 
   let neqPos = str.indexOf("\\neq");
   while (neqPos !== -1) {
