@@ -35,6 +35,10 @@ function processText(input) {
   str = str.replaceAll("\\begin{bmatrix}", "[[");
   str = str.replaceAll("\\end{bmatrix}", "]]");
 
+
+  str = str.replaceAll("\\dots", "cdots");
+
+
   // Using a regular expression to target text within \begin{bmatrix} and \end{bmatrix}
   str = str.replace(/\[\[([\s\S]*?)\]\]/g, function (match, insideMatrix) {
     // Replace & with comma and \\ with closing row
@@ -90,21 +94,21 @@ document.getElementById("processButton").addEventListener("click", () => {
   const inputText = document.getElementById("inputText").value;
   const processedText = processText(inputText);
 
-  // Display the processed output
   const outputDiv = document.getElementById("output");
   outputDiv.hidden = false;
-  outputDiv.textContent = "Copied";
+  outputDiv.innerHTML = '<span class="text-jump">Copied</span>'; // Wrap text in a span for animation
 
-  // Copy the processed text to clipboard
-  navigator.clipboard
-    .writeText(processedText)
-    .then(() => { })
-    .catch((err) => {
-      alert("Processed text failed to copied to clipboard!");
-
-      console.error("Failed to copy text: ", err);
-    });
+  // Copy text to clipboard
+  navigator.clipboard.writeText(processedText)
+      .catch((err) => {
+          alert("Failed to copy to clipboard!");
+          console.error("Error copying text: ", err);
+      });
 });
+
+
+
+  
 
 // Button for "Show Output"
 document.getElementById("showOutputButton").addEventListener("click", () => {
