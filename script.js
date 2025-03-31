@@ -26,6 +26,8 @@ function processText(input) {
     }
   }
 
+
+
   str = str.replace(/(\d),(\d{3})/g, "$1 $2");
   str = str.replace(/\d+/g, (match) => {
     return match.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
@@ -35,19 +37,15 @@ function processText(input) {
   str = str.replaceAll("\\begin{bmatrix}", "[[");
   str = str.replaceAll("\\end{bmatrix}", "]]");
 
-
   str = str.replaceAll("\\dots", "cdots");
 
-
-  // Using a regular expression to target text within \begin{bmatrix} and \end{bmatrix}
   str = str.replace(/\[\[([\s\S]*?)\]\]/g, function (match, insideMatrix) {
-    // Replace & with comma and \\ with closing row
-    insideMatrix = insideMatrix.replace(/&/g, ","); // Replace matrix element separator
-    insideMatrix = insideMatrix.replace(/\\\\s*/g, "],["); // Remove the backslash and extra spaces (for \\)
-
-    // Rebuild the matrix with replaced elements
+    insideMatrix = insideMatrix.replace(/&/g, ",");
+    insideMatrix = insideMatrix.replace(/\\\\s*/g, "],[");
     return "[[" + insideMatrix + "]]";
   });
+
+ 
 
   // Removing specific substrings
   const findAndRemove = (subStr) => {
@@ -61,12 +59,18 @@ function processText(input) {
   findAndRemove("\\left");
   findAndRemove("\\right");
   findAndRemove("---");
+  findAndRemove("####");
   findAndRemove("###");
   findAndRemove("***");
   findAndRemove("##");
   findAndRemove("**");
   findAndRemove(".\n");
   findAndRemove(":\n");
+
+
+   // Making "Step X : text" bold and replacing ":" with ")"
+   str = str.replace(/(Step \d+):(.*)/g, "**$1) $2**");
+   str = str.replace(/(Problem \d+):(.*)/g, "**$1) $2**");
 
   let neqPos = str.indexOf("\\neq");
   while (neqPos !== -1) {
@@ -81,13 +85,14 @@ function processText(input) {
   }
 
   str = str
-    .split("\n") // Split the string into lines
-    .map((line) => line.trim()) // Remove leading/trailing whitespaces
-    .filter((line) => line) // Remove empty lines
-    .join("\n"); // Rejoin the lines into a single string
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line)
+    .join("\n");
 
   return str;
 }
+
 
 // Button for "Process and Copy"
 document.getElementById("processButton").addEventListener("click", () => {
