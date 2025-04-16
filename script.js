@@ -72,6 +72,8 @@ function processText(input) {
    str = str.replace(/(Step \d+):(.*)/g, "**$1) $2**");
    str = str.replace(/(Problem \d+):(.*)/g, "**$1) $2**");
 
+  str = str.replace(/\\boxed{([^{}]*(?:{[^{}]*}[^{}]*)*)}/g, "$1");
+
   let neqPos = str.indexOf("\\neq");
   while (neqPos !== -1) {
     str = str.slice(0, neqPos + 3) + str.slice(neqPos + 4);
