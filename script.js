@@ -36,6 +36,12 @@ function processText(input) {
   // Replacing \begin{bmatrix} with [[ and \end{bmatrix} with ]]
   str = str.replaceAll("\\begin{bmatrix}", "[[");
   str = str.replaceAll("\\end{bmatrix}", "]]");
+  str = str.replaceAll("\\begin{cases}", "{(");
+  str = str.replaceAll("\\end{cases}", "):}");
+  str = str.replaceAll("\\begin{vmatrix}", "[[");
+  str = str.replaceAll("\\end{vmatrix}", "]]");
+  str = str.replaceAll("\\begin{aligned}", "[[");
+  str = str.replaceAll("\\end{aligned}", "]]");
 
   str = str.replaceAll("\\dots", "cdots");
 
@@ -43,6 +49,13 @@ function processText(input) {
     insideMatrix = insideMatrix.replace(/&/g, ",");
     insideMatrix = insideMatrix.replace(/\\\\s*/g, "],[");
     return "[[" + insideMatrix + "]]";
+  });
+
+
+  str = str.replace(/\{\(([\s\S]*?)\)\:\}/g, function (match, insideMatrix) {
+    insideMatrix = insideMatrix.replace(/&/g, ",");
+    insideMatrix = insideMatrix.replace(/\\\\s*/g, "),(");
+    return "{(" + insideMatrix + "):}";
   });
 
  
@@ -71,8 +84,7 @@ function processText(input) {
    // Making "Step X : text" bold and replacing ":" with ")"
    str = str.replace(/(Step \d+):(.*)/g, "**$1) $2**");
    str = str.replace(/(Problem \d+):(.*)/g, "**$1) $2**");
-
-  str = str.replace(/\\boxed{([^{}]*(?:{[^{}]*}[^{}]*)*)}/g, "$1");
+   str = str.replace(/\\boxed{([^{}]*(?:{[^{}]*}[^{}]*)*)}/g, "$1");
 
   let neqPos = str.indexOf("\\neq");
   while (neqPos !== -1) {
